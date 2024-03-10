@@ -48,6 +48,14 @@ switch ($method) {
     if ($result->num_rows > 0) {
       echo json_encode(array("message" => "Email or username already exists"));
     } else {
+      /* // Hash the password before storing it
+      $hashed_password = password_hash($data->password, PASSWORD_DEFAULT);
+
+      $sql = "INSERT INTO users (name, email, password, username, purchase_history, shipping_address) VALUES (?, ?, ?, ?, ?, ?)";
+      $stmt = $conn->prepare($sql);
+      $stmt->bind_param("ssssss", $data->name, $data->email, $hashed_password, $data->username, $data->purchase_history, $data->shipping_address);
+      $stmt->execute(); */
+
       $sql = "INSERT INTO users (name, email, password, username, purchase_history, shipping_address) VALUES (?, ?, ?, ?, ?, ?)";
       $stmt = $conn->prepare($sql);
       $stmt->bind_param("ssssss", $data->name, $data->email, $data->password, $data->username, $data->purchase_history, $data->shipping_address);
@@ -61,6 +69,14 @@ switch ($method) {
 
     $id = $_GET['user_id'];
     $data = json_decode(file_get_contents("php://input"));
+
+    /* // Hash the new password before storing it
+    $hashed_password = password_hash($data->password, PASSWORD_DEFAULT);
+
+    $sql = "UPDATE users SET name = ?, password = ?, purchase_history = ?, shipping_address = ? WHERE user_id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ssssi", $data->name, $hashed_password, $data->purchase_history, $data->shipping_address, $id);
+    $stmt->execute(); */
 
     $sql = "UPDATE users SET name = ?, password = ?, purchase_history = ?, shipping_address = ? WHERE user_id = ?";
     $stmt = $conn->prepare($sql);
