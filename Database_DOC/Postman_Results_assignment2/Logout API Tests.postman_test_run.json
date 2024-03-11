@@ -1,0 +1,175 @@
+{
+	"id": "6925688a-cc94-4d05-887e-2e4517cfd70c",
+	"name": "Shoecart - Logout API Tests",
+	"timestamp": "2024-03-11T01:28:35.227Z",
+	"collection_id": "261942-fc817ec1-345d-4072-9507-6a5ba8ff6c52",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 13,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2024-03-11T01:28:34.825Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "9c318332-4802-45ec-addc-5630e67e32ab",
+			"name": "POST Request to Login (Positive Case)",
+			"url": "http://localhost/shoecart/server/api/login.php",
+			"time": 30,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response time is less than 500ms": true,
+				"Response is of type JSON": true,
+				"Login successful": true,
+				"Response contains user details": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response time is less than 500ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login successful": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains user details": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				30
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response time is less than 500ms": true,
+					"Response is of type JSON": true,
+					"Login successful": true,
+					"Response contains user details": true
+				}
+			]
+		},
+		{
+			"id": "10faf0ee-5ba1-4fa7-ab3e-c72f3d9b20d3",
+			"name": "GET Request to Logout (Positive Case)",
+			"url": "http://localhost/shoecart/server/api/logout.php",
+			"time": 8,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response time is less than 500ms": true,
+				"Response is of type JSON": true,
+				"Logout successful": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response time is less than 500ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Logout successful": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response time is less than 500ms": true,
+					"Response is of type JSON": true,
+					"Logout successful": true
+				}
+			]
+		},
+		{
+			"id": "77cb0972-4c24-4539-bdd7-9aab8b5498a7",
+			"name": "GET Request to Logout (Negative Case)",
+			"url": "http://localhost/shoecart/server/api/logout.php",
+			"time": 4,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response time is less than 500ms": true,
+				"Response is of type JSON": true,
+				"Logout unsuccessful": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response time is less than 500ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Logout unsuccessful": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				4
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response time is less than 500ms": true,
+					"Response is of type JSON": true,
+					"Logout unsuccessful": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 42,
+	"collection": {
+		"requests": [
+			{
+				"id": "9c318332-4802-45ec-addc-5630e67e32ab",
+				"method": "POST"
+			},
+			{
+				"id": "10faf0ee-5ba1-4fa7-ab3e-c72f3d9b20d3",
+				"method": "GET"
+			},
+			{
+				"id": "77cb0972-4c24-4539-bdd7-9aab8b5498a7",
+				"method": "GET"
+			}
+		]
+	}
+}

@@ -1,0 +1,409 @@
+{
+	"id": "5e895067-ebfc-4ed0-8e44-fbac4a166f0d",
+	"name": "Shoecart - Products API Tests",
+	"timestamp": "2024-03-11T01:31:29.602Z",
+	"collection_id": "261942-641a3448-675b-4238-81b2-e30e9afe93b4",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 17,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2024-03-11T01:31:28.584Z",
+	"totalFail": 10,
+	"results": [
+		{
+			"id": "70f8b9a2-dca2-4dd4-940b-28831baf6e06",
+			"name": "GET Requests to Retrieve  Product - Individual product",
+			"url": "http://localhost/shoecart/server/api/products.php?product_id=1",
+			"time": 25,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response is of type JSON": true,
+				"Response should be an object with product details": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an object with product details": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				25
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response is of type JSON": true,
+					"Response should be an object with product details": false
+				}
+			]
+		},
+		{
+			"id": "d33b1900-b9ab-4b5f-a09e-f240f877034f",
+			"name": "GET Requests to Retrieve  Product - All products with a limit",
+			"url": "http://localhost/shoecart/server/api/products.php?limit=5",
+			"time": 19,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response is of type JSON": true,
+				"Response should be an array with maximum 5 products": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an array with maximum 5 products": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				19
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response is of type JSON": true,
+					"Response should be an array with maximum 5 products": true
+				}
+			]
+		},
+		{
+			"id": "3fb39eac-671e-4af7-bff7-f275799971fe",
+			"name": "GET Requests to Retrieve Product - All products",
+			"url": "http://localhost/shoecart/server/api/products.php",
+			"time": 13,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response is of type JSON": true,
+				"Response should be an array": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an array": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				13
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response is of type JSON": true,
+					"Response should be an array": true
+				}
+			]
+		},
+		{
+			"id": "c97f7df2-eeb9-4116-b8e4-47f3a2726465",
+			"name": "POST Request to Add products",
+			"url": "http://localhost/shoecart/server/api/products.php",
+			"time": 10,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response is of type JSON": true,
+				"Response should be an object with success message": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an object with success message": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				10
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response is of type JSON": true,
+					"Response should be an object with success message": false
+				}
+			]
+		},
+		{
+			"id": "c765c1e2-ab06-422c-8503-2e82f911f6e2",
+			"name": "POST Request to Add products - Missing required fields",
+			"url": "http://localhost/shoecart/server/api/products.php",
+			"time": 9,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 400": false,
+				"Response is of type JSON": true,
+				"Response should be an object with error message": false
+			},
+			"testPassFailCounts": {
+				"Status code is 400": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an object with error message": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				9
+			],
+			"allTests": [
+				{
+					"Status code is 400": false,
+					"Response is of type JSON": true,
+					"Response should be an object with error message": false
+				}
+			]
+		},
+		{
+			"id": "8ef18d54-7993-490e-8f1e-61125f539007",
+			"name": "PUT Requests to Update products",
+			"url": "http://localhost/shoecart/server/api/products.php?product_id=10",
+			"time": 19,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response is of type JSON": true,
+				"Response should be an object with success message": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an object with success message": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				19
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response is of type JSON": true,
+					"Response should be an object with success message": false
+				}
+			]
+		},
+		{
+			"id": "4616f3ad-b566-45b8-9e0d-f4bd9d6659c4",
+			"name": "PUT Requests to Update products - Trying to update a non-existent product",
+			"url": "http://localhost/shoecart/server/api/products.php?product_id=100",
+			"time": 8,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 404": false,
+				"Response is of type JSON": true,
+				"Response should be an object with error message": false
+			},
+			"testPassFailCounts": {
+				"Status code is 404": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an object with error message": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				8
+			],
+			"allTests": [
+				{
+					"Status code is 404": false,
+					"Response is of type JSON": true,
+					"Response should be an object with error message": false
+				}
+			]
+		},
+		{
+			"id": "cbb2be25-4a6a-49f4-9e65-7ca1ab32c74e",
+			"name": "DELETE Request to Remove products (Positive Case)",
+			"url": "http://localhost/shoecart/server/api/products.php?product_id=2",
+			"time": 38,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response is of type JSON": true,
+				"Response should be an object with success message": false
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an object with success message": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				38
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response is of type JSON": true,
+					"Response should be an object with success message": false
+				}
+			]
+		},
+		{
+			"id": "f93bd93e-7c5b-41d5-ba94-40b0bf89f74b",
+			"name": "DELETE Request to Remove products (Negative Case)",
+			"url": "http://localhost/shoecart/server/api/products.php?product_id=100",
+			"time": 19,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 404": false,
+				"Response is of type JSON": true,
+				"Response should be an object with error message": false
+			},
+			"testPassFailCounts": {
+				"Status code is 404": {
+					"pass": 0,
+					"fail": 1
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response should be an object with error message": {
+					"pass": 0,
+					"fail": 1
+				}
+			},
+			"times": [
+				19
+			],
+			"allTests": [
+				{
+					"Status code is 404": false,
+					"Response is of type JSON": true,
+					"Response should be an object with error message": false
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 160,
+	"collection": {
+		"requests": [
+			{
+				"id": "70f8b9a2-dca2-4dd4-940b-28831baf6e06",
+				"method": "GET"
+			},
+			{
+				"id": "d33b1900-b9ab-4b5f-a09e-f240f877034f",
+				"method": "GET"
+			},
+			{
+				"id": "3fb39eac-671e-4af7-bff7-f275799971fe",
+				"method": "GET"
+			},
+			{
+				"id": "c97f7df2-eeb9-4116-b8e4-47f3a2726465",
+				"method": "POST"
+			},
+			{
+				"id": "c765c1e2-ab06-422c-8503-2e82f911f6e2",
+				"method": "POST"
+			},
+			{
+				"id": "8ef18d54-7993-490e-8f1e-61125f539007",
+				"method": "PUT"
+			},
+			{
+				"id": "4616f3ad-b566-45b8-9e0d-f4bd9d6659c4",
+				"method": "PUT"
+			},
+			{
+				"id": "cbb2be25-4a6a-49f4-9e65-7ca1ab32c74e",
+				"method": "DELETE"
+			},
+			{
+				"id": "f93bd93e-7c5b-41d5-ba94-40b0bf89f74b",
+				"method": "DELETE"
+			}
+		]
+	}
+}

@@ -1,0 +1,224 @@
+{
+	"id": "c6daacfb-88be-4cd0-90b9-c83f42ed0564",
+	"name": "Shoecart - Login API Tests",
+	"timestamp": "2024-03-11T01:22:53.514Z",
+	"collection_id": "261942-eae92628-61f6-4863-ba94-9a8b40be20f8",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 17,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2024-03-11T01:22:52.926Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "114a1497-1aaa-4fa4-97d9-066923e01090",
+			"name": "POST Request to Login (Positive Case)",
+			"url": "http://localhost/shoecart/server/api/login.php",
+			"time": 16,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response time is less than 500ms": true,
+				"Response is of type JSON": true,
+				"Login successful": true,
+				"Response contains user details": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response time is less than 500ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login successful": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response contains user details": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				16
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response time is less than 500ms": true,
+					"Response is of type JSON": true,
+					"Login successful": true,
+					"Response contains user details": true
+				}
+			]
+		},
+		{
+			"id": "4be4ee67-6572-4c97-a85a-d2f6ca5f149a",
+			"name": "POST Request to Login (Negative Case - Invalid Credentials)",
+			"url": "http://localhost/shoecart/server/api/login.php",
+			"time": 32,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response time is less than 500ms": true,
+				"Response is of type JSON": true,
+				"Login unsuccessful": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response time is less than 500ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login unsuccessful": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				32
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response time is less than 500ms": true,
+					"Response is of type JSON": true,
+					"Login unsuccessful": true
+				}
+			]
+		},
+		{
+			"id": "eee2b0ab-c728-4140-acb2-a129380946f6",
+			"name": "POST Request to Login (Negative Case - Missing Username)",
+			"url": "http://localhost/shoecart/server/api/login.php",
+			"time": 30,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response time is less than 500ms": true,
+				"Response is of type JSON": true,
+				"Login unsuccessful": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response time is less than 500ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login unsuccessful": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				30
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response time is less than 500ms": true,
+					"Response is of type JSON": true,
+					"Login unsuccessful": true
+				}
+			]
+		},
+		{
+			"id": "351a359d-69e9-4cb0-9d09-c9507737a9bf",
+			"name": "POST Request to Login (Negative Case - Missing Password)",
+			"url": "http://localhost/shoecart/server/api/login.php",
+			"time": 16,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Status code is 200": true,
+				"Response time is less than 500ms": true,
+				"Response is of type JSON": true,
+				"Login unsuccessful": true
+			},
+			"testPassFailCounts": {
+				"Status code is 200": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response time is less than 500ms": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Response is of type JSON": {
+					"pass": 1,
+					"fail": 0
+				},
+				"Login unsuccessful": {
+					"pass": 1,
+					"fail": 0
+				}
+			},
+			"times": [
+				16
+			],
+			"allTests": [
+				{
+					"Status code is 200": true,
+					"Response time is less than 500ms": true,
+					"Response is of type JSON": true,
+					"Login unsuccessful": true
+				}
+			]
+		}
+	],
+	"count": 1,
+	"totalTime": 94,
+	"collection": {
+		"requests": [
+			{
+				"id": "114a1497-1aaa-4fa4-97d9-066923e01090",
+				"method": "POST"
+			},
+			{
+				"id": "4be4ee67-6572-4c97-a85a-d2f6ca5f149a",
+				"method": "POST"
+			},
+			{
+				"id": "eee2b0ab-c728-4140-acb2-a129380946f6",
+				"method": "POST"
+			},
+			{
+				"id": "351a359d-69e9-4cb0-9d09-c9507737a9bf",
+				"method": "POST"
+			}
+		]
+	}
+}
