@@ -12,8 +12,13 @@ include_once 'dbconfig.php';
 $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
+
   case 'GET':
     $sql = "SELECT * FROM users";
+    if (isset($_GET['limit']) && is_numeric($_GET['limit'])) {
+      $limit = intval($_GET['limit']);
+      $sql .= " LIMIT " . $limit;
+    }
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
@@ -26,6 +31,7 @@ switch ($method) {
       echo json_encode(array("message" => "No users found"));
     }
     break;
+
 
   case 'POST':
 
@@ -97,7 +103,7 @@ switch ($method) {
     echo json_encode(array("message" => "User deleted"));
     break;
 
-    default:
+  default:
     echo json_encode(array("message" => "Invalid request method"));
     break;
 }
