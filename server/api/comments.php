@@ -53,43 +53,61 @@ class Comment
 
     function update()
     {
-        // Check if the comment exists
-        $query = "SELECT * FROM " . $this->table_name . " WHERE comment_id = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->comment_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        if ($result->num_rows === 0) {
-            // Comment does not exist
+        if (!$this->exists()) {
             return false;
         }
 
-        // Comment exists, update it
-        $query = "UPDATE " . $this->table_name . " SET product_id = ?, user_id = ?, rating = ?, image_url = ?, comment = ? WHERE comment_id = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("iiissi", $this->product_id, $this->user_id, $this->rating, $this->image_url, $this->comment, $this->comment_id);
-        if ($stmt->execute()) {
-            return true;
+        $query = "UPDATE " . $this->table_name . " SET rating = ?, image_url = ?, comment = ? WHERE ";
+        $params = array($this->rating, $this->image_url, $this->comment);
+        $types = "sss";
+
+        if (!empty($this->comment_id)) {
+            $query .= "comment_id = ?";
+            $params[] = $this->comment_id;
+            $types .= "i";
+        } else if (!empty($this->user_id) && !empty($this->product_id)) {
+            $query .= "user_id = ? AND product_id = ?";
+            $params[] = $this->user_id;
+            $params[] = $this->product_id;
+            $types .= "ii";
+        } else {
+            return false;
         }
 
-        return false;
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param($types, ...$params);
+        return $stmt->execute();
     }
 
     function delete()
     {
-        $query = "DELETE FROM " . $this->table_name . " WHERE comment_id = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->comment_id);
-        if ($stmt->execute()) {
-            return true;
+        $query = "DELETE FROM " . $this->table_name . " WHERE ";
+        $params = array();
+        $types = "";
+    
+        if (!empty($this->comment_id)) {
+            $query .= "comment_id = ?";
+            $params[] = $this->comment_id;
+            $types .= "i";
+        } else if (!empty($this->user_id) && !empty($this->product_id)) {
+            $query .= "user_id = ? AND product_id = ?";
+            $params[] = $this->user_id;
+            $params[] = $this->product_id;
+            $types .= "ii";
+        } else {
+            return false;
         }
-        return false;
+    
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param($types, ...$params);
+        return $stmt->execute();
     }
 
-    public function exists() {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE comment_id = ?";
+    public function exists()
+    {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE comment_id = ? OR (user_id = ? AND product_id = ?)";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->comment_id);
+        $stmt->bind_param("iii", $this->comment_id, $this->user_id, $this->product_id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->num_rows > 0;
@@ -130,7 +148,7 @@ switch ($requestMethod) {
             $limit = isset($_GET["limit"]) ? $_GET["limit"] : null;
             if ($limit !== null && !is_numeric($limit)) {
                 http_response_code(400);
-                echo json_encode(array("message" => "Invalid limit parameter. It should be an integer."));
+                echo json_encode(array("message" => "Invalid limit value."));
                 break;
             }
             $limit = $limit !== null ? intval($limit) : null;
@@ -144,7 +162,7 @@ switch ($requestMethod) {
                 echo json_encode($comments);
             } else {
                 http_response_code(404);
-                echo json_encode(array("message" => "No comments found for this product."));
+                echo json_encode(array("message" => "Product not found."));
             }
         } else {
             http_response_code(400);
@@ -161,7 +179,7 @@ switch ($requestMethod) {
             $comment->image_url = $data->image_url;
             $comment->comment = $data->comment;
             if ($comment->create()) {
-                http_response_code(201);
+                http_response_code(200);
                 echo json_encode(array("message" => "Comment created."));
             } else {
                 http_response_code(500);
@@ -172,46 +190,57 @@ switch ($requestMethod) {
             echo json_encode(array("message" => "Unable to create comment. Data is incomplete."));
         }
         break;
+
     case 'PUT':
-        if (!empty($_GET["comment_id"])) {
-            $comment->comment_id = intval($_GET["comment_id"]);
-            $data = json_decode(file_get_contents("php://input"));
-            $comment->product_id = $data->product_id;
-            $comment->user_id = $data->user_id;
-            $comment->rating = $data->rating;
-            $comment->image_url = $data->image_url;
-            $comment->comment = $data->comment;
-            if ($comment->exists() && $comment->update()) {
-                http_response_code(200);
-                echo json_encode(array("message" => "Comment updated."));
-            } else {
-                http_response_code(404);
-                echo json_encode(array("message" => "No comment found with this ID or unable to update the comment."));
-            }
+        $data = json_decode(file_get_contents("php://input"));
+
+        if (isset($data->comment_id) && !empty($data->comment_id)) {
+            $comment->comment_id = intval($data->comment_id);
+        } else if (isset($data->user_id) && !empty($data->user_id) && isset($data->product_id) && !empty($data->product_id)) {
+            $comment->user_id = intval($data->user_id);
+            $comment->product_id = intval($data->product_id);
         } else {
             http_response_code(400);
-            echo json_encode(array("message" => "Unable to update comment. Comment ID is missing."));
+            echo json_encode(array("message" => "Unable to update comment. Comment ID or User ID and Product ID are missing."));
+            break;
+        }
+
+        $comment->rating = $data->rating;
+        $comment->image_url = $data->image_url;
+        $comment->comment = $data->comment;
+
+        if ($comment->update()) {
+            http_response_code(200);
+            echo json_encode(array("message" => "Comment updated."));
+        } else {
+            http_response_code(500);
+            echo json_encode(array("message" => "Comment not found. Unable to update."));
         }
         break;
 
+
+
     case 'DELETE':
-        if (!empty($_GET["comment_id"])) {
-            $comment->comment_id = intval($_GET["comment_id"]);
+        if (!empty($_GET["comment_id"]) || (!empty($_GET["user_id"]) && !empty($_GET["product_id"]))) {
+            $comment->comment_id = isset($_GET["comment_id"]) ? intval($_GET["comment_id"]) : null;
+            $comment->user_id = isset($_GET["user_id"]) ? intval($_GET["user_id"]) : null;
+            $comment->product_id = isset($_GET["product_id"]) ? intval($_GET["product_id"]) : null;
+
             if ($comment->exists() && $comment->delete()) {
                 http_response_code(200);
                 echo json_encode(array("message" => "Comment deleted."));
             } else {
                 http_response_code(404);
-                echo json_encode(array("message" => "No comment found with this ID or unable to delete the comment."));
+                echo json_encode(array("message" => "Comment not found."));
             }
         } else {
             http_response_code(400);
-            echo json_encode(array("message" => "Unable to delete comment. Comment ID is missing."));
+            echo json_encode(array("message" => "Comment ID or User ID and Product ID are missing."));
         }
         break;
+
     default:
         http_response_code(405);
         echo json_encode(array("message" => "Request method not allowed."));
         break;
 }
-?>

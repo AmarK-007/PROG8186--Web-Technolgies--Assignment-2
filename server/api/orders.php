@@ -19,6 +19,17 @@ switch ($method) {
             $limit = isset($_GET['limit']) ? $_GET['limit'] : null;
 
             if (!empty($order_id)) {
+                // Check if order_id exists in the database
+                $sql = "SELECT * FROM orders WHERE order_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $order_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows == 0) {
+                    echo json_encode(array("message" => "Order not found"));
+                    return;
+                }
                 // Get individual order with details
                 $sql = "SELECT orders.*, orderdetails.* FROM orders 
                         INNER JOIN orderdetails ON orders.order_id = orderdetails.order_id 
@@ -52,6 +63,7 @@ switch ($method) {
             echo json_encode(array("message" => "GET request failed: " . $e->getMessage()));
         }
         break;
+
 
     case 'POST':
         try {
@@ -97,67 +109,69 @@ switch ($method) {
         }
         break;
 
-        case 'PUT':
-            try {
-                $conn->begin_transaction();
-        
-                $data = json_decode(file_get_contents("php://input"));
-        
-                // Check if all necessary fields are set and are of the correct type
-                if (!isset($data->user_id, $data->total_amount, $data->order_date, $data->payment_method, $data->delivery_status, $data->return_status, $data->orderdetails) || 
-                    !is_int($data->user_id) || !is_float($data->total_amount) || !is_string($data->order_date) || !is_string($data->payment_method) || 
-                    !is_string($data->delivery_status) || !is_string($data->return_status) || !is_array($data->orderdetails)) {
-                    echo json_encode(array("message" => "Invalid or missing data"));
+    case 'PUT':
+        try {
+            $conn->begin_transaction();
+
+            $data = json_decode(file_get_contents("php://input"));
+
+            // Check if all necessary fields are set and are of the correct type
+            if (
+                !isset($data->order_id, $data->user_id, $data->total_amount, $data->order_date, $data->payment_method, $data->delivery_status, $data->return_status, $data->orderdetails) ||
+                !is_int($data->order_id) || !is_int($data->user_id) || !is_float($data->total_amount) || !is_string($data->order_date) || !is_string($data->payment_method) ||
+                !is_string($data->delivery_status) || !is_string($data->return_status) || !is_array($data->orderdetails)
+            ) {
+                echo json_encode(array("message" => "Invalid or missing data"));
+                return;
+            }
+
+            $order_id = isset($_GET['order_id']) ? $_GET['order_id'] : null;
+
+            if (!empty($order_id)) {
+                // Check if order_id exists in the database
+                $sql = "SELECT * FROM orders WHERE order_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $order_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows == 0) {
+                    echo json_encode(array("message" => "Order not found"));
                     return;
                 }
-        
-                $order_id = isset($_GET['order_id']) ? $_GET['order_id'] : null;
-        
-                if (!empty($order_id)) {
-                    // Check if order_id exists in the database
-                    $sql = "SELECT * FROM orders WHERE order_id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $order_id);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-        
-                    if ($result->num_rows == 0) {
-                        echo json_encode(array("message" => "Order not found"));
+
+                // Since we've checked that all fields are set and are of the correct type, we can directly assign them
+                $user_id = $data->user_id;
+                $total_amount = $data->total_amount;
+                $order_date = $data->order_date;
+                $payment_method = $data->payment_method;
+                $delivery_status = $data->delivery_status;
+                $return_status = $data->return_status;
+
+                $sql = "UPDATE orders SET user_id = ?, total_amount = ?, order_date = ?, payment_method = ?, delivery_status = ?, return_status = ? WHERE order_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("idisssi", $user_id, $total_amount, $order_date, $payment_method, $delivery_status, $return_status, $order_id);
+                $stmt->execute();
+
+                // Update orderdetails
+                foreach ($data->orderdetails as $detail) {
+                    if (!isset($detail->product_id, $detail->quantity, $detail->product_size) || !is_int($detail->product_id) || !is_int($detail->quantity) || !is_int($detail->product_size)) {
+                        echo json_encode(array("message" => "Invalid or missing data in orderdetails"));
                         return;
                     }
-        
-                    // Since we've checked that all fields are set and are of the correct type, we can directly assign them
-                    $user_id = $data->user_id;
-                    $total_amount = $data->total_amount;
-                    $order_date = $data->order_date;
-                    $payment_method = $data->payment_method;
-                    $delivery_status = $data->delivery_status;
-                    $return_status = $data->return_status;
-        
-                    $sql = "UPDATE orders SET user_id = ?, total_amount = ?, order_date = ?, payment_method = ?, delivery_status = ?, return_status = ? WHERE order_id = ?";
+
+                    $product_id = $detail->product_id;
+                    $quantity = $detail->quantity;
+                    $product_size = $detail->product_size;
+
+                    $sql = "UPDATE orderdetails SET product_id = ?, quantity = ?, product_size = ? WHERE order_id = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("idissssi", $user_id, $total_amount, $order_date, $payment_method, $delivery_status, $return_status, $order_id);
+                    $stmt->bind_param("iisi", $product_id, $quantity, $product_size, $order_id);
                     $stmt->execute();
-        
-                    // Update orderdetails
-                    foreach ($data->orderdetails as $detail) {
-                        if (!isset($detail->product_id, $detail->quantity, $detail->product_size) || !is_int($detail->product_id) || !is_int($detail->quantity) || !is_string($detail->product_size)) {
-                            echo json_encode(array("message" => "Invalid or missing data in orderdetails"));
-                            return;
-                        }
-        
-                        $product_id = $detail->product_id;
-                        $quantity = $detail->quantity;
-                        $product_size = $detail->product_size;
-        
-                        $sql = "UPDATE orderdetails SET product_id = ?, quantity = ?, product_size = ? WHERE order_id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("iisi", $product_id, $quantity, $product_size, $order_id);
-                        $stmt->execute();
-                    }
-        
-                    // Update productsizes
-                    $sql = "
+                }
+
+                // Update productsizes
+                $sql = "
                         UPDATE productsizes ps
                         INNER JOIN (
                             SELECT od.product_id, od.quantity, od.product_size
@@ -167,63 +181,62 @@ switch ($method) {
                         ) o ON ps.product_id = o.product_id AND ps.size_us = o.product_size
                         SET ps.quantity = ps.quantity - o.quantity
                     ";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $order_id);
-                    $stmt->execute();
-        
-                    echo json_encode(array("message" => "Order updated"));
-                } else {
-                    echo json_encode(array("message" => "Missing order_id"));
-                }
-                $conn->commit();
-            } catch (Exception $e) {
-                $conn->rollback();
-                echo json_encode(array("message" => "PUT request failed: " . $e->getMessage()));
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $order_id);
+                $stmt->execute();
+
+                echo json_encode(array("message" => "Order updated"));
+            } else {
+                echo json_encode(array("message" => "Missing order_id"));
             }
-            break;
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            echo json_encode(array("message" => "PUT request failed: " . $e->getMessage()));
+        }
+        break;
 
 
+    case 'DELETE':
+        try {
+            $conn->begin_transaction();
+            $order_id = isset($_GET['order_id']) ? $_GET['order_id'] : null;
 
-            case 'DELETE':
-                try {
-                    $conn->begin_transaction();
-                    $order_id = isset($_GET['order_id']) ? $_GET['order_id'] : null;
-            
-                    if (!empty($order_id)) {
-                        // Check if order_id exists in the database
-                        $sql = "SELECT * FROM orders WHERE order_id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("i", $order_id);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-            
-                        if ($result->num_rows == 0) {
-                            echo json_encode(array("message" => "Order not found"));
-                            return;
-                        }
-            
-                        // Delete the order details
-                        $sql = "DELETE FROM orderdetails WHERE order_id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("i", $order_id);
-                        $stmt->execute();
-            
-                        // Delete the order
-                        $sql = "DELETE FROM orders WHERE order_id = ?";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("i", $order_id);
-                        $stmt->execute();
-            
-                        echo json_encode(array("message" => "Order deleted"));
-                    } else {
-                        echo json_encode(array("message" => "Missing order_id"));
-                    }
-                    $conn->commit();
-                } catch (Exception $e) {
-                    $conn->rollback();
-                    echo json_encode(array("message" => "DELETE request failed: " . $e->getMessage()));
+            if (!empty($order_id)) {
+                // Check if order_id exists in the database
+                $sql = "SELECT * FROM orders WHERE order_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $order_id);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows == 0) {
+                    echo json_encode(array("message" => "Order not found"));
+                    return;
                 }
-                break;
+
+                // Delete the order details
+                $sql = "DELETE FROM orderdetails WHERE order_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $order_id);
+                $stmt->execute();
+
+                // Delete the order
+                $sql = "DELETE FROM orders WHERE order_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $order_id);
+                $stmt->execute();
+
+                echo json_encode(array("message" => "Order deleted"));
+            } else {
+                echo json_encode(array("message" => "Missing order_id"));
+            }
+            $conn->commit();
+        } catch (Exception $e) {
+            $conn->rollback();
+            echo json_encode(array("message" => "DELETE request failed: " . $e->getMessage()));
+        }
+        break;
 
     default:
         echo json_encode(array("message" => "Invalid request method"));

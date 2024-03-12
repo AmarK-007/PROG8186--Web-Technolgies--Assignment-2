@@ -1,22 +1,22 @@
 {
-	"id": "602da94f-8c4d-4911-980e-926c6ab8f90e",
+	"id": "b0b7e7e6-f46c-4b0f-973b-bd263212ad1d",
 	"name": "Shoecart - Comments API Tests",
-	"timestamp": "2024-03-11T01:33:36.494Z",
+	"timestamp": "2024-03-12T02:37:11.674Z",
 	"collection_id": "261942-08cdfa1a-edc1-47ce-9ab2-8a5f42409ded",
 	"folder_id": 0,
 	"environment_id": "0",
-	"totalPass": 23,
+	"totalPass": 36,
 	"delay": 0,
 	"persist": true,
 	"status": "finished",
-	"startedAt": "2024-03-11T01:33:35.308Z",
-	"totalFail": 13,
+	"startedAt": "2024-03-12T02:37:10.274Z",
+	"totalFail": 0,
 	"results": [
 		{
 			"id": "18bbc1c9-be01-4194-8ce7-a6f38f360a05",
 			"name": "GET Request with Limit",
 			"url": "http://localhost/shoecart/server/api/comments.php?product_id=1&limit=5",
-			"time": 30,
+			"time": 14,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -41,7 +41,7 @@
 				}
 			},
 			"times": [
-				30
+				14
 			],
 			"allTests": [
 				{
@@ -55,7 +55,7 @@
 			"id": "d1a73016-b77e-4d9f-b024-cc45c53d6755",
 			"name": "GET Request without Limit",
 			"url": "http://localhost/shoecart/server/api/comments.php?product_id=1",
-			"time": 19,
+			"time": 10,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -80,7 +80,7 @@
 				}
 			},
 			"times": [
-				19
+				10
 			],
 			"allTests": [
 				{
@@ -94,7 +94,7 @@
 			"id": "56573a3d-479b-4c51-a16e-59658e73e2ec",
 			"name": "GET Request without Product ID",
 			"url": "http://localhost/shoecart/server/api/comments.php",
-			"time": 17,
+			"time": 33,
 			"responseCode": {
 				"code": 400,
 				"name": "Bad Request"
@@ -102,7 +102,7 @@
 			"tests": {
 				"Status code is 400": true,
 				"Response is of type JSON": true,
-				"Response should be an object with error message": false
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 400": {
@@ -114,18 +114,18 @@
 					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				17
+				33
 			],
 			"allTests": [
 				{
 					"Status code is 400": true,
 					"Response is of type JSON": true,
-					"Response should be an object with error message": false
+					"Response should be an object with error message": true
 				}
 			]
 		},
@@ -141,7 +141,7 @@
 			"tests": {
 				"Status code is 404": true,
 				"Response is of type JSON": true,
-				"Response should be an object with error message": false
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 404": {
@@ -153,8 +153,8 @@
 					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
@@ -164,7 +164,7 @@
 				{
 					"Status code is 404": true,
 					"Response is of type JSON": true,
-					"Response should be an object with error message": false
+					"Response should be an object with error message": true
 				}
 			]
 		},
@@ -180,7 +180,7 @@
 			"tests": {
 				"Status code is 400": true,
 				"Response is of type JSON": true,
-				"Response should be an object with error message": false
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 400": {
@@ -192,8 +192,8 @@
 					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
@@ -203,7 +203,7 @@
 				{
 					"Status code is 400": true,
 					"Response is of type JSON": true,
-					"Response should be an object with error message": false
+					"Response should be an object with error message": true
 				}
 			]
 		},
@@ -211,38 +211,38 @@
 			"id": "524ddeff-568c-454b-8a33-7efca8e44630",
 			"name": "POST Request (Positive Case)",
 			"url": "http://localhost/shoecart/server/api/comments.php",
-			"time": 36,
+			"time": 17,
 			"responseCode": {
-				"code": 201,
-				"name": "Created"
+				"code": 200,
+				"name": "OK"
 			},
 			"tests": {
-				"Status code is 200": false,
+				"Status code is 200": true,
 				"Response is of type JSON": true,
-				"Response should be an object with success message": false
+				"Response should be an object with success message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 200": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response is of type JSON": {
 					"pass": 1,
 					"fail": 0
 				},
 				"Response should be an object with success message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				36
+				17
 			],
 			"allTests": [
 				{
-					"Status code is 200": false,
+					"Status code is 200": true,
 					"Response is of type JSON": true,
-					"Response should be an object with success message": false
+					"Response should be an object with success message": true
 				}
 			]
 		},
@@ -250,7 +250,7 @@
 			"id": "50c26092-1de3-4493-88dd-3283d50e6c42",
 			"name": "POST Request (Negative Case)",
 			"url": "http://localhost/shoecart/server/api/comments.php",
-			"time": 11,
+			"time": 9,
 			"responseCode": {
 				"code": 400,
 				"name": "Bad Request"
@@ -258,7 +258,7 @@
 			"tests": {
 				"Status code is 400": true,
 				"Response is of type JSON": true,
-				"Response should be an object with error message": false
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 400": {
@@ -270,76 +270,76 @@
 					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				11
+				9
 			],
 			"allTests": [
 				{
 					"Status code is 400": true,
 					"Response is of type JSON": true,
-					"Response should be an object with error message": false
+					"Response should be an object with error message": true
 				}
 			]
 		},
 		{
 			"id": "890e81ce-f4d7-441c-baae-801fa8f08a7c",
 			"name": "PUT Request (Positive Case)",
-			"url": "http://localhost/shoecart/server/api/comments.php?comment_id=1",
-			"time": 34,
+			"url": "http://localhost/shoecart/server/api/comments.php",
+			"time": 55,
 			"responseCode": {
-				"code": 404,
-				"name": "Not Found"
+				"code": 200,
+				"name": "OK"
 			},
 			"tests": {
-				"Status code is 200": false,
+				"Status code is 200": true,
 				"Response is of type JSON": true,
-				"Response should be an object with success message": false
+				"Response should be an object with success message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 200": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response is of type JSON": {
 					"pass": 1,
 					"fail": 0
 				},
 				"Response should be an object with success message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				34
+				55
 			],
 			"allTests": [
 				{
-					"Status code is 200": false,
+					"Status code is 200": true,
 					"Response is of type JSON": true,
-					"Response should be an object with success message": false
+					"Response should be an object with success message": true
 				}
 			]
 		},
 		{
 			"id": "d81b6631-4621-4bc8-9a3c-5b76f736be31",
 			"name": "PUT Request (Negative Case)",
-			"url": "http://localhost/shoecart/server/api/comments.php?comment_id=1111",
-			"time": 18,
+			"url": "http://localhost/shoecart/server/api/comments.php",
+			"time": 9,
 			"responseCode": {
-				"code": 404,
-				"name": "Not Found"
+				"code": 500,
+				"name": "Internal Server Error"
 			},
 			"tests": {
-				"Status code is 404": true,
+				"Status code is 500": true,
 				"Response is of type JSON": true,
-				"Response should be an object with error message": false
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
-				"Status code is 404": {
+				"Status code is 500": {
 					"pass": 1,
 					"fail": 0
 				},
@@ -348,57 +348,57 @@
 					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				18
+				9
 			],
 			"allTests": [
 				{
-					"Status code is 404": true,
+					"Status code is 500": true,
 					"Response is of type JSON": true,
-					"Response should be an object with error message": false
+					"Response should be an object with error message": true
 				}
 			]
 		},
 		{
 			"id": "52b6fe6f-8e54-4a94-b647-5598f0f4cc9e",
 			"name": "DELETE Request (Positive Case)",
-			"url": "http://localhost/shoecart/server/api/comments.php?comment_id=11",
-			"time": 19,
+			"url": "http://localhost/shoecart/server/api/comments.php?product_id=1&user_id=1",
+			"time": 76,
 			"responseCode": {
-				"code": 404,
-				"name": "Not Found"
+				"code": 200,
+				"name": "OK"
 			},
 			"tests": {
-				"Status code is 200": false,
+				"Status code is 200": true,
 				"Response is of type JSON": true,
-				"Response should be an object with success message": false
+				"Response should be an object with success message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 200": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response is of type JSON": {
 					"pass": 1,
 					"fail": 0
 				},
 				"Response should be an object with success message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				19
+				76
 			],
 			"allTests": [
 				{
-					"Status code is 200": false,
+					"Status code is 200": true,
 					"Response is of type JSON": true,
-					"Response should be an object with success message": false
+					"Response should be an object with success message": true
 				}
 			]
 		},
@@ -406,7 +406,7 @@
 			"id": "a524f266-01ce-4f4f-ae60-790e11835d05",
 			"name": "DELETE Request (Negative Case)",
 			"url": "http://localhost/shoecart/server/api/comments.php?comment_id=1111",
-			"time": 17,
+			"time": 34,
 			"responseCode": {
 				"code": 404,
 				"name": "Not Found"
@@ -414,7 +414,7 @@
 			"tests": {
 				"Status code is 404": true,
 				"Response is of type JSON": true,
-				"Response should be an object with error message": false
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 404": {
@@ -426,18 +426,18 @@
 					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				17
+				34
 			],
 			"allTests": [
 				{
 					"Status code is 404": true,
 					"Response is of type JSON": true,
-					"Response should be an object with error message": false
+					"Response should be an object with error message": true
 				}
 			]
 		},
@@ -445,7 +445,7 @@
 			"id": "ea6ec73e-a8c8-42a7-9666-3cbc34190bd1",
 			"name": "DELETE Request without Comment ID",
 			"url": "http://localhost/shoecart/server/api/comments.php",
-			"time": 17,
+			"time": 8,
 			"responseCode": {
 				"code": 400,
 				"name": "Bad Request"
@@ -453,7 +453,7 @@
 			"tests": {
 				"Status code is 400": true,
 				"Response is of type JSON": true,
-				"Response should be an object with error message": false
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 400": {
@@ -465,24 +465,24 @@
 					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				17
+				8
 			],
 			"allTests": [
 				{
 					"Status code is 400": true,
 					"Response is of type JSON": true,
-					"Response should be an object with error message": false
+					"Response should be an object with error message": true
 				}
 			]
 		}
 	],
 	"count": 1,
-	"totalTime": 239,
+	"totalTime": 286,
 	"collection": {
 		"requests": [
 			{

@@ -1,0 +1,170 @@
+{
+	"info": {
+		"_postman_id": "fc817ec1-345d-4072-9507-6a5ba8ff6c52",
+		"name": "Shoecart - Logout API Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "261942"
+	},
+	"item": [
+		{
+			"name": "POST Request to Login (Positive Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Login successful\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.status).to.eql(true);\r",
+							"    pm.expect(jsonData.message).to.eql(\"Successfully Login!\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains user details\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('user_id');\r",
+							"    pm.expect(jsonData).to.have.property('username');\r",
+							"    pm.expect(jsonData.username).to.eql('amarnath');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"username\": \"amarnath\",\r\n        \"password\": \"password123\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/login.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"login.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Request to Logout (Positive Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Logout successful\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.status).to.eql(true);\r",
+							"    pm.expect(jsonData.message).to.eql(\"Successfully Logout!\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/logout.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"logout.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Request to Logout (Negative Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 500ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Logout unsuccessful\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.status).to.eql(false);\r",
+							"    pm.expect(jsonData.message).to.eql(\"No active session found. Please login first.\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/logout.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"logout.php"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

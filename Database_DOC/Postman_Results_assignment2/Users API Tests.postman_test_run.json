@@ -1,22 +1,22 @@
 {
-	"id": "815e00fb-efd9-4b30-aa9d-3f7da2f3f680",
+	"id": "273d45fa-ec99-4857-b97c-9358d6ed55a5",
 	"name": "Shoecart - Users API Tests",
-	"timestamp": "2024-03-11T01:29:53.002Z",
+	"timestamp": "2024-03-12T02:40:58.514Z",
 	"collection_id": "261942-4ab2131a-ee49-4351-9d1d-e6234f9b253c",
 	"folder_id": 0,
 	"environment_id": "0",
-	"totalPass": 18,
+	"totalPass": 31,
 	"delay": 0,
 	"persist": true,
 	"status": "finished",
-	"startedAt": "2024-03-11T01:29:51.986Z",
-	"totalFail": 13,
+	"startedAt": "2024-03-12T02:40:57.155Z",
+	"totalFail": 0,
 	"results": [
 		{
 			"id": "04858ecc-1162-47ab-b82f-537ef75b2f10",
 			"name": "GET Request to Retrieve Users (Positive Case)",
 			"url": "http://localhost/shoecart/server/api/users.php",
-			"time": 31,
+			"time": 18,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -46,7 +46,7 @@
 				}
 			},
 			"times": [
-				31
+				18
 			],
 			"allTests": [
 				{
@@ -61,7 +61,7 @@
 			"id": "2330d27d-a51a-4f1b-87ce-7199b5cfe765",
 			"name": "GET Request to Retrieve Users (Positive Case - Limit)",
 			"url": "http://localhost/shoecart/server/api/users.php?limit=1",
-			"time": 17,
+			"time": 9,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -86,7 +86,7 @@
 				}
 			},
 			"times": [
-				17
+				9
 			],
 			"allTests": [
 				{
@@ -100,7 +100,7 @@
 			"id": "35e2d6df-af6f-40c5-9561-eedf2708641e",
 			"name": "POST Request to Add User (Positive Case)",
 			"url": "http://localhost/shoecart/server/api/users.php",
-			"time": 17,
+			"time": 15,
 			"responseCode": {
 				"code": 200,
 				"name": "OK"
@@ -108,7 +108,7 @@
 			"tests": {
 				"Status code is 200": true,
 				"Response is of type JSON": true,
-				"Response should be an object with message 'User created'": false
+				"Response should be an object with message 'User created'": true
 			},
 			"testPassFailCounts": {
 				"Status code is 200": {
@@ -120,18 +120,18 @@
 					"fail": 0
 				},
 				"Response should be an object with message 'User created'": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				17
+				15
 			],
 			"allTests": [
 				{
 					"Status code is 200": true,
 					"Response is of type JSON": true,
-					"Response should be an object with message 'User created'": false
+					"Response should be an object with message 'User created'": true
 				}
 			]
 		},
@@ -178,7 +178,7 @@
 			"id": "04dabc40-ffe3-49ed-bdb9-5e57f122987c",
 			"name": "POST Request to Add User (Negative Case -  Missing Required Fields)",
 			"url": "http://localhost/shoecart/server/api/users.php",
-			"time": 17,
+			"time": 33,
 			"responseCode": {
 				"code": 400,
 				"name": "Bad Request"
@@ -203,7 +203,7 @@
 				}
 			},
 			"times": [
-				17
+				33
 			],
 			"allTests": [
 				{
@@ -216,55 +216,55 @@
 		{
 			"id": "bacb9d2b-97d0-45f5-b422-50c9d62584cb",
 			"name": "PUT Request to Update User (Positive Case)",
-			"url": "http://localhost/shoecart/server/api/users.php?id=7",
-			"time": 34,
+			"url": "http://localhost/shoecart/server/api/users.php?username=annamalai",
+			"time": 116,
 			"responseCode": {
-				"code": 404,
-				"name": "Not Found"
+				"code": 200,
+				"name": "OK"
 			},
 			"tests": {
-				"Status code is 200": false,
-				"Response is of type JSON": false,
-				"Response should be an object with message 'User updated'": false
+				"Status code is 200": true,
+				"Response is of type JSON": true,
+				"Response should be an object with message 'User updated'": true
 			},
 			"testPassFailCounts": {
 				"Status code is 200": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response is of type JSON": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response should be an object with message 'User updated'": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				34
+				116
 			],
 			"allTests": [
 				{
-					"Status code is 200": false,
-					"Response is of type JSON": false,
-					"Response should be an object with message 'User updated'": false
+					"Status code is 200": true,
+					"Response is of type JSON": true,
+					"Response should be an object with message 'User updated'": true
 				}
 			]
 		},
 		{
 			"id": "e5bcd86e-5b7f-4371-a26c-b95af27efa1d",
 			"name": "PUT Request to Update User (Negative Case - User not found)",
-			"url": "http://localhost/shoecart/server/api/users.php?id=7",
-			"time": 18,
+			"url": "http://localhost/shoecart/server/api/users.php?user_id=7",
+			"time": 9,
 			"responseCode": {
 				"code": 404,
 				"name": "Not Found"
 			},
 			"tests": {
 				"Status code is 404": true,
-				"Response is of type JSON": false,
-				"Response should be an object with error message": false
+				"Response is of type JSON": true,
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 404": {
@@ -272,38 +272,38 @@
 					"fail": 0
 				},
 				"Response is of type JSON": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				18
+				9
 			],
 			"allTests": [
 				{
 					"Status code is 404": true,
-					"Response is of type JSON": false,
-					"Response should be an object with error message": false
+					"Response is of type JSON": true,
+					"Response should be an object with error message": true
 				}
 			]
 		},
 		{
 			"id": "27e3a61d-831d-43b1-b41a-1fa3c60abab5",
 			"name": "PUT Request to Update User (Negative Case -  Missing Required Fields)",
-			"url": "http://localhost/shoecart/server/api/users.php?id=7",
-			"time": 16,
+			"url": "http://localhost/shoecart/server/api/users.php?user_id=7",
+			"time": 8,
 			"responseCode": {
 				"code": 400,
 				"name": "Bad Request"
 			},
 			"tests": {
 				"Status code is 400": true,
-				"Response is of type JSON": false,
-				"Response should be an object with error message": false
+				"Response is of type JSON": true,
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 400": {
@@ -311,77 +311,77 @@
 					"fail": 0
 				},
 				"Response is of type JSON": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				16
+				8
 			],
 			"allTests": [
 				{
 					"Status code is 400": true,
-					"Response is of type JSON": false,
-					"Response should be an object with error message": false
+					"Response is of type JSON": true,
+					"Response should be an object with error message": true
 				}
 			]
 		},
 		{
 			"id": "dc3d4937-b698-427c-b9a5-f10855b994b7",
 			"name": "DELETE Request to Remove User (Positive Case)",
-			"url": "http://localhost/shoecart/server/api/users.php?id=7",
-			"time": 32,
+			"url": "http://localhost/shoecart/server/api/users.php?username=annamalai",
+			"time": 40,
 			"responseCode": {
-				"code": 404,
-				"name": "Not Found"
+				"code": 200,
+				"name": "OK"
 			},
 			"tests": {
-				"Status code is 200": false,
-				"Response is of type JSON": false,
-				"Response should be an object with message 'User deleted'": false
+				"Status code is 200": true,
+				"Response is of type JSON": true,
+				"Response should be an object with message 'User deleted'": true
 			},
 			"testPassFailCounts": {
 				"Status code is 200": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response is of type JSON": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response should be an object with message 'User deleted'": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				32
+				40
 			],
 			"allTests": [
 				{
-					"Status code is 200": false,
-					"Response is of type JSON": false,
-					"Response should be an object with message 'User deleted'": false
+					"Status code is 200": true,
+					"Response is of type JSON": true,
+					"Response should be an object with message 'User deleted'": true
 				}
 			]
 		},
 		{
 			"id": "868a3a4e-22b2-4c2e-8d4d-98b701c07d79",
 			"name": "DELETE Request to Remove User (Negative Case)",
-			"url": "http://localhost/shoecart/server/api/users.php?id=7",
-			"time": 19,
+			"url": "http://localhost/shoecart/server/api/users.php?user_id=7",
+			"time": 8,
 			"responseCode": {
 				"code": 404,
 				"name": "Not Found"
 			},
 			"tests": {
 				"Status code is 404": true,
-				"Response is of type JSON": false,
-				"Response should be an object with error message": false
+				"Response is of type JSON": true,
+				"Response should be an object with error message": true
 			},
 			"testPassFailCounts": {
 				"Status code is 404": {
@@ -389,28 +389,28 @@
 					"fail": 0
 				},
 				"Response is of type JSON": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				},
 				"Response should be an object with error message": {
-					"pass": 0,
-					"fail": 1
+					"pass": 1,
+					"fail": 0
 				}
 			},
 			"times": [
-				19
+				8
 			],
 			"allTests": [
 				{
 					"Status code is 404": true,
-					"Response is of type JSON": false,
-					"Response should be an object with error message": false
+					"Response is of type JSON": true,
+					"Response should be an object with error message": true
 				}
 			]
 		}
 	],
 	"count": 1,
-	"totalTime": 219,
+	"totalTime": 274,
 	"collection": {
 		"requests": [
 			{

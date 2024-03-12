@@ -24,9 +24,9 @@ class Cart
 
     function readByUser()
     {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE user_id = ?";
+        $query = "SELECT * FROM " . $this->table_name . " WHERE user_id = ? OR cart_id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->user_id);
+        $stmt->bind_param("ii", $this->user_id, $this->cart_id);
         $stmt->execute();
         return $stmt->get_result();
     }
@@ -44,9 +44,9 @@ class Cart
 
     function update()
     {
-        $query = "UPDATE " . $this->table_name . " SET product_id = ?, user_id = ?, quantity = ? WHERE cart_id = ?";
+        $query = "UPDATE " . $this->table_name . " SET product_id = ?, user_id = ?, quantity = ? WHERE user_id = ? OR cart_id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("iiii", $this->product_id, $this->user_id, $this->quantity, $this->cart_id);
+        $stmt->bind_param("iiiii", $this->product_id, $this->user_id, $this->quantity, $this->user_id, $this->cart_id);
         if ($stmt->execute()) {
             return true;
         }
@@ -55,19 +55,20 @@ class Cart
 
     function delete()
     {
-        $query = "DELETE FROM " . $this->table_name . " WHERE cart_id = ?";
+        $query = "DELETE FROM " . $this->table_name . " WHERE user_id = ? OR cart_id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->cart_id);
+        $stmt->bind_param("ii", $this->user_id, $this->cart_id);
         if ($stmt->execute()) {
             return true;
         }
         return false;
     }
 
-    public function exists() {
-        $query = "SELECT * FROM " . $this->table_name . " WHERE cart_id = ?";
+    public function exists()
+    {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE user_id = ? OR cart_id = ?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("i", $this->cart_id);
+        $stmt->bind_param("ii", $this->user_id, $this->cart_id);
         $stmt->execute();
         $result = $stmt->get_result();
         return $result->num_rows > 0;
@@ -104,23 +105,27 @@ $cart = new Cart($conn);
 $requestMethod = $_SERVER["REQUEST_METHOD"];
 switch ($requestMethod) {
     case 'GET':
-        if (!empty($_GET["user_id"])) {
+        if (!empty($_GET["cart_id"])) {
+            $cart->cart_id = intval($_GET["cart_id"]);
+        } elseif (!empty($_GET["user_id"])) {
             $cart->user_id = intval($_GET["user_id"]);
-            $stmt = $cart->readByUser();
-            if ($stmt->num_rows > 0) {
-                $carts = array();
-                while ($row = $stmt->fetch_assoc()) {
-                    array_push($carts, $row);
-                }
-                http_response_code(200);
-                echo json_encode($carts);
-            } else {
-                http_response_code(404);
-                echo json_encode(array("message" => "No cart items found for this user."));
-            }
         } else {
             http_response_code(400);
-            echo json_encode(array("message" => "User ID is missing."));
+            echo json_encode(array("message" => "User ID or Cart ID is missing."));
+            break;
+        }
+
+        $stmt = $cart->readByUser();
+        if ($stmt->num_rows > 0) {
+            $carts = array();
+            while ($row = $stmt->fetch_assoc()) {
+                array_push($carts, $row);
+            }
+            http_response_code(200);
+            echo json_encode($carts);
+        } else {
+            http_response_code(404);
+            echo json_encode(array("message" => "No cart items found for this user."));
         }
         break;
 
@@ -132,7 +137,7 @@ switch ($requestMethod) {
             $cart->quantity = $data->quantity;
             if ($cart->create()) {
                 http_response_code(201);
-                echo json_encode(array("message" => "Cart item created."));
+                echo json_encode(array("message" => "Item added to cart."));
             } else {
                 http_response_code(500);
                 echo json_encode(array("message" => "Unable to create cart item."));
@@ -143,39 +148,49 @@ switch ($requestMethod) {
         }
         break;
 
+
+
     case 'PUT':
         if (!empty($_GET["cart_id"])) {
             $cart->cart_id = intval($_GET["cart_id"]);
-            $data = json_decode(file_get_contents("php://input"));
-            $cart->product_id = $data->product_id;
-            $cart->user_id = $data->user_id;
-            $cart->quantity = $data->quantity;
-            if ($cart->exists() && $cart->update()) {
-                http_response_code(200);
-                echo json_encode(array("message" => "Cart item updated."));
-            } else {
-                http_response_code(404);
-                echo json_encode(array("message" => "No cart item found with this ID or unable to update the cart item."));
-            }
+        } elseif (!empty($_GET["user_id"])) {
+            $cart->user_id = intval($_GET["user_id"]);
         } else {
             http_response_code(400);
-            echo json_encode(array("message" => "Unable to update cart item. Cart ID is missing."));
+            echo json_encode(array("message" => "User ID or Cart ID is missing."));
+            break;
+        }
+
+        $data = json_decode(file_get_contents("php://input"));
+        $cart->product_id = $data->product_id;
+        $cart->user_id = $data->user_id;
+        $cart->quantity = $data->quantity;
+        if ($cart->exists() && $cart->update()) {
+            http_response_code(200);
+            echo json_encode(array("message" => "Cart item updated."));
+        } else {
+            http_response_code(404);
+            echo json_encode(array("message" => "Cart item not found."));
         }
         break;
 
     case 'DELETE':
         if (!empty($_GET["cart_id"])) {
             $cart->cart_id = intval($_GET["cart_id"]);
-            if ($cart->exists() && $cart->delete()) {
-                http_response_code(200);
-                echo json_encode(array("message" => "Cart item deleted."));
-            } else {
-                http_response_code(404);
-                echo json_encode(array("message" => "No cart item found with this ID or unable to delete the cart item."));
-            }
+        } elseif (!empty($_GET["user_id"])) {
+            $cart->user_id = intval($_GET["user_id"]);
         } else {
             http_response_code(400);
-            echo json_encode(array("message" => "Unable to delete cart item. Cart ID is missing."));
+            echo json_encode(array("message" => "User ID or Cart ID is missing."));
+            break;
+        }
+
+        if ($cart->exists() && $cart->delete()) {
+            http_response_code(200);
+            echo json_encode(array("message" => "Cart item deleted."));
+        } else {
+            http_response_code(404);
+            echo json_encode(array("message" => "Cart item not found."));
         }
         break;
 
@@ -184,4 +199,3 @@ switch ($requestMethod) {
         echo json_encode(array("message" => "Request method not allowed."));
         break;
 }
-?>

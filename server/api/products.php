@@ -19,7 +19,7 @@ switch ($method) {
 
             if (!empty($product_id)) {
                 // Get individual product
-                $sql = "SELECT DISTINCT product_id FROM products WHERE product_id = ?";
+                $sql = "SELECT DISTINCT product_id FROM products WHERE is_deleted = 0 AND product_id = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("i", $product_id);
                 $stmt->execute();
@@ -84,26 +84,52 @@ switch ($method) {
             $data = json_decode(file_get_contents("php://input"));
 
             if (!empty($data->product_id) && !empty($data->title) && !empty($data->description) && !empty($data->price) && !empty($data->image_url) && !empty($data->sizes)) {
-                $sql = "INSERT INTO products (product_id, title, description, price) VALUES (?, ?, ?, ?)";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("issd", $data->product_id, $data->title, $data->description, $data->price);
-                $stmt->execute();
+                // Check if the product_id already exists in the database
+                $check_sql = "SELECT product_id, is_deleted FROM products WHERE product_id = ?";
+                $check_stmt = $conn->prepare($check_sql);
+                $check_stmt->bind_param("i", $data->product_id);
+                $check_stmt->execute();
+                $check_result = $check_stmt->get_result();
 
-                foreach ($data->image_url as $image_url) {
-                    $sql = "INSERT INTO productimages (product_id, image_url) VALUES (?, ?)";
+                if ($check_result->num_rows > 0) {
+                    // Product with the same product_id already exists
+                    $row = $check_result->fetch_assoc();
+                    if ($row['is_deleted'] == 1) {
+                        // If the product is marked as deleted, unmark it and update its details
+                        $sql = "UPDATE products SET title = ?, description = ?, price = ?, is_deleted = 0 WHERE product_id = ?";
+                        $stmt = $conn->prepare($sql);
+                        $stmt->bind_param("ssdi", $data->title, $data->description, $data->price, $data->product_id);
+                        $stmt->execute();
+
+                        echo json_encode(array("message" => "Product created")); //"Product updated and unmarked as deleted"));
+                    } else {
+                        echo json_encode(array("message" => "Product with the same ID already exists"));
+                    }
+                } else {
+                    // Product doesn't exist, proceed with insertion
+                    $sql = "INSERT INTO products (product_id, title, description, price) VALUES (?, ?, ?, ?)";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("is", $data->product_id, $image_url);
+                    $stmt->bind_param("issd", $data->product_id, $data->title, $data->description, $data->price);
                     $stmt->execute();
-                }
 
-                foreach ($data->sizes as $size) {
-                    $sql = "INSERT INTO productsizes (product_id, size_us, quantity) VALUES (?, ?, ?)";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("isi", $data->product_id, $size->size_us, $size->quantity);
-                    $stmt->execute();
-                }
+                    // Insert image URLs
+                    foreach ($data->image_url as $image_url) {
+                        $image_sql = "INSERT INTO productimages (product_id, image_url) VALUES (?, ?)";
+                        $image_stmt = $conn->prepare($image_sql);
+                        $image_stmt->bind_param("is", $data->product_id, $image_url);
+                        $image_stmt->execute();
+                    }
 
-                echo json_encode(array("message" => "Product created"));
+                    // Insert sizes
+                    foreach ($data->sizes as $size) {
+                        $size_sql = "INSERT INTO productsizes (product_id, size_us, quantity) VALUES (?, ?, ?)";
+                        $size_stmt = $conn->prepare($size_sql);
+                        $size_stmt->bind_param("isi", $data->product_id, $size->size_us, $size->quantity);
+                        $size_stmt->execute();
+                    }
+
+                    echo json_encode(array("message" => "Product created"));
+                }
             } else {
                 echo json_encode(array("message" => "Missing product data"));
             }
@@ -114,6 +140,7 @@ switch ($method) {
         }
         break;
 
+
     case 'PUT':
         try {
             $conn->begin_transaction();
@@ -123,53 +150,67 @@ switch ($method) {
             $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : null;
 
             if (!empty($product_id)) {
-                $title = !empty($data->title) ? $data->title : null;
-                $description = !empty($data->description) ? $data->description : null;
-                $price = !empty($data->price) ? $data->price : null;
+                // Check if the product_id exists in the database
+                $check_sql = "SELECT product_id FROM products WHERE product_id = ?";
+                $check_stmt = $conn->prepare($check_sql);
+                $check_stmt->bind_param("i", $product_id);
+                $check_stmt->execute();
+                $check_result = $check_stmt->get_result();
 
-                $sql = "UPDATE products SET title = COALESCE(?, title), description = COALESCE(?, description), price = COALESCE(?, price) WHERE product_id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ssdi", $title, $description, $price, $product_id);
-                $stmt->execute();
-
-                if (!empty($data->image_url)) {
-                    $sql = "DELETE FROM productimages WHERE product_id = ?";
+                if ($check_result->num_rows > 0) {
+                    // Product exists, proceed with update
+                    $sql = "UPDATE products SET title = ?, description = ?, price = ? WHERE product_id = ?";
                     $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $product_id);
+                    $stmt->bind_param("ssdi", $data->title, $data->description, $data->price, $product_id);
                     $stmt->execute();
 
+                    // Delete existing image URLs and sizes
+                    $delete_image_sql = "DELETE FROM productimages WHERE product_id = ?";
+                    $delete_image_stmt = $conn->prepare($delete_image_sql);
+                    $delete_image_stmt->bind_param("i", $product_id);
+                    $delete_image_stmt->execute();
+
+                    $delete_size_sql = "DELETE FROM productsizes WHERE product_id = ?";
+                    $delete_size_stmt = $conn->prepare($delete_size_sql);
+                    $delete_size_stmt->bind_param("i", $product_id);
+                    $delete_size_stmt->execute();
+
+                    // Insert new image URLs and sizes
                     foreach ($data->image_url as $image_url) {
-                        $sql = "INSERT INTO productimages (product_id, image_url) VALUES (?, ?)";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("is", $product_id, $image_url);
-                        $stmt->execute();
+                        $image_sql = "INSERT INTO productimages (product_id, image_url) VALUES (?, ?)";
+                        $image_stmt = $conn->prepare($image_sql);
+                        $image_stmt->bind_param("is", $product_id, $image_url);
+                        $image_stmt->execute();
                     }
-                }
 
-                if (!empty($data->sizes)) {
-                    $sql = "DELETE FROM productsizes WHERE product_id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $product_id);
-                    $stmt->execute();
-
+                    // Insert new sizes
                     foreach ($data->sizes as $size) {
-                        $sql = "INSERT INTO productsizes (product_id, size_us, quantity) VALUES (?, ?, ?)";
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bind_param("isi", $product_id, $size->size_us, $size->quantity);
-                        $stmt->execute();
+                        $size_sql = "INSERT INTO productsizes (product_id, size_us, quantity) VALUES (?, ?, ?)";
+                        $size_stmt = $conn->prepare($size_sql);
+                        $size_stmt->bind_param("isi", $product_id, $size->size_us, $size->quantity);
+                        $size_stmt->execute();
                     }
-                }
 
-                echo json_encode(array("message" => "Product updated"));
+                    echo json_encode(array("message" => "Product updated"));
+                } else {
+                    http_response_code(404);
+                    echo json_encode(array("message" => "Product not found."));
+                }
             } else {
+                http_response_code(400);
                 echo json_encode(array("message" => "Missing product_id"));
             }
+
             $conn->commit();
         } catch (Exception $e) {
             $conn->rollback();
+            http_response_code(500);
+
             echo json_encode(array("message" => "PUT request failed: " . $e->getMessage()));
         }
         break;
+
+
 
     case 'DELETE':
         try {
@@ -177,25 +218,13 @@ switch ($method) {
             $product_id = isset($_GET['product_id']) ? $_GET['product_id'] : null;
 
             if (!empty($product_id)) {
-                // First delete the associated images
-                $sql = "DELETE FROM productimages WHERE product_id = ?";
+                // Mark the product as deleted
+                $sql = "UPDATE products SET is_deleted = 1 WHERE product_id = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("i", $product_id);
                 $stmt->execute();
 
-                // Then delete the associated sizes
-                $sql = "DELETE FROM productsizes WHERE product_id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $product_id);
-                $stmt->execute();
-
-                // Finally, delete the product
-                $sql = "DELETE FROM products WHERE product_id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $product_id);
-                $stmt->execute();
-
-                echo json_encode(array("message" => "Product deleted"));
+                echo json_encode(array("message" => "Product marked as deleted"));
             } else {
                 echo json_encode(array("message" => "Missing product_id"));
             }

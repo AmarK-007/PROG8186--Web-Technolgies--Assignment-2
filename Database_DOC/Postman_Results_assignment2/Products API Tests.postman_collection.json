@@ -1,0 +1,522 @@
+{
+	"info": {
+		"_postman_id": "641a3448-675b-4238-81b2-e30e9afe93b4",
+		"name": "Shoecart - Products API Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "261942"
+	},
+	"item": [
+		{
+			"name": "GET Requests to Retrieve  Product - Individual product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be an array with a single product\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf(1);\r",
+							"    var product = jsonData[0];\r",
+							"    pm.expect(product).to.have.property('product_id');\r",
+							"    pm.expect(product).to.have.property('product_name');\r",
+							"    pm.expect(product).to.have.property('product_description');\r",
+							"    pm.expect(product).to.have.property('product_price');\r",
+							"    pm.expect(product).to.have.property('image_url');\r",
+							"    pm.expect(product).to.have.property('sizes');\r",
+							"    pm.expect(product.image_url).to.be.an('array').that.is.not.empty;\r",
+							"    pm.expect(product.sizes).to.be.an('array').that.is.not.empty;\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php?product_id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					],
+					"query": [
+						{
+							"key": "product_id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Requests to Retrieve  Product - All products with a limit",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an array with maximum 5 products\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an('array').that.has.lengthOf.at.most(5);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php?limit=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Requests to Retrieve Product - All products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an array\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an('array');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Request to Remove products (Positive Case) Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with success message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message').eql('Product marked as deleted');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php?product_id=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					],
+					"query": [
+						{
+							"key": "product_id",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Request to Add products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should contain success message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    if (pm.response.code === 200) {\r",
+							"        pm.expect(jsonData).to.have.property('message').eql('Product created');\r",
+							"    } else {\r",
+							"         pm.expect(jsonData).to.have.property('message').eql('Product with the same ID already exists');\r",
+							"    \r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"product_id\": 10,\r\n  \"title\": \"New Tennis Shoe\",\r\n  \"description\": \"New Shoe Description\",\r\n  \"price\": \"50.99\",\r\n  \"image_url\": [\r\n    \"/images/new-shoe-1.jpg\",\r\n    \"/images/new-shoe-2.jpg\"\r\n  ],\r\n  \"sizes\": [\r\n    {\r\n      \"size_us\": 6,\r\n      \"quantity\": 10\r\n    },\r\n    {\r\n      \"size_us\": 7,\r\n      \"quantity\": 10\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Request to Add products - Missing required fields",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be an object with error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message').eql('Missing product data');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"product_id\": 11,\r\n  \"price\": \"50.99\",\r\n  \"image_url\": [\r\n    \"/images/new-shoe-1.jpg\",\r\n    \"/images/new-shoe-2.jpg\"\r\n  ],\r\n  \"sizes\": [\r\n    {\r\n      \"size_us\": 6,\r\n      \"quantity\": 10\r\n    },\r\n    {\r\n      \"size_us\": 7,\r\n      \"quantity\": 10\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Requests to Update products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with success message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message').eql('Product updated');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"product_id\": 10,\r\n  \"title\": \"New Tennis Shoe\",\r\n  \"description\": \"New Shoe Description\",\r\n  \"price\": \"99.99\",\r\n  \"image_url\": [\r\n    \"/images/new-shoe-3.jpg\",\r\n    \"/images/new-shoe-2.jpg\"\r\n  ],\r\n  \"sizes\": [\r\n    {\r\n      \"size_us\": 7,\r\n      \"quantity\": 10\r\n    },\r\n    {\r\n      \"size_us\": 8,\r\n      \"quantity\": 10\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php?product_id=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					],
+					"query": [
+						{
+							"key": "product_id",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Requests to Update products - Trying to update a non-existent product",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message').eql('Product not found.');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"product_id\": 10,\r\n  \"title\": \"New Tennis Shoe\",\r\n  \"description\": \"New Shoe Description\",\r\n  \"price\": \"99.99\",\r\n  \"image_url\": [\r\n    \"/images/new-shoe-3.jpg\",\r\n    \"/images/new-shoe-2.jpg\"\r\n  ],\r\n  \"sizes\": [\r\n    {\r\n      \"size_us\": 7,\r\n      \"quantity\": 10\r\n    },\r\n    {\r\n      \"size_us\": 8,\r\n      \"quantity\": 10\r\n    }\r\n  ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php?product_id=100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					],
+					"query": [
+						{
+							"key": "product_id",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Request to Remove products (Positive Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with success message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message').eql('Product marked as deleted');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php?product_id=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					],
+					"query": [
+						{
+							"key": "product_id",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Request to Remove products (Negative Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be an object with success message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.have.property('message').eql('Product marked as deleted');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/products.php?product_id=100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"products.php"
+					],
+					"query": [
+						{
+							"key": "product_id",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

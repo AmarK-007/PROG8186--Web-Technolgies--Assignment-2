@@ -1,0 +1,533 @@
+{
+	"info": {
+		"_postman_id": "4ab2131a-ee49-4351-9d1d-e6234f9b253c",
+		"name": "Shoecart - Users API Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "261942"
+	},
+	"item": [
+		{
+			"name": "GET Request to Retrieve Users (Positive Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an array\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"array\");\r",
+							"});\r",
+							"pm.test(\"Each user object should have required properties\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    jsonData.forEach(function(user) {\r",
+							"        pm.expect(user).to.have.property(\"name\");\r",
+							"        pm.expect(user).to.have.property(\"email\");\r",
+							"        pm.expect(user).to.have.property(\"username\");\r",
+							"        pm.expect(user).to.have.property(\"purchase_history\");\r",
+							"        pm.expect(user).to.have.property(\"shipping_address\");\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Request to Retrieve Users (Positive Case - Limit)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an array with length equal to limit\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"array\");\r",
+							"    pm.expect(jsonData.length).to.eql(1); \r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php?limit=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Request to Add User (Positive Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with message 'User created'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.message).to.eql(\"User created\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Annamalai\",\r\n  \"email\": \"annamalaian@shoecart.com\",\r\n  \"password\": \"password123\",\r\n  \"username\": \"annamalai\",\r\n  \"purchase_history\": \"0\",\r\n  \"shipping_address\": \"123 Main St\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Request to Add User (Negative Case - User already exists)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with message 'Email or username already exists'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.message).to.eql(\"Email or username already exists\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Annamalai\",\r\n  \"email\": \"annamalaian@shoecart.com\",\r\n  \"password\": \"password123\",\r\n  \"username\": \"annamalai\",\r\n  \"purchase_history\": \"0\",\r\n  \"shipping_address\": \"123 Main St\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Request to Add User (Negative Case -  Missing Required Fields)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.message).to.include(\"Missing required field\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Annamalai\",\r\n  \"email\": \"annamalaian@shoecart.com\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Request to Update User (Positive Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with message 'User updated'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.message).to.eql(\"User updated\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Annamalai\",\r\n  \"email\": \"annamalai@shoecart.com\",\r\n  \"password\": \"password123\",\r\n  \"username\": \"annamalai\",\r\n  \"purchase_history\": \"0\",\r\n  \"shipping_address\": \"365 Lester Main St\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php?username=annamalai",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "annamalai"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Request to Update User (Negative Case - User not found)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.message).to.include(\"User not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Annamalai\",\r\n  \"email\": \"annamalai@shoecart.com\",\r\n  \"password\": \"password123\",\r\n  \"username\": \"annamalai\",\r\n  \"purchase_history\": \"0\",\r\n  \"shipping_address\": \"365 Lester Main St\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php?user_id=7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "7"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Request to Update User (Negative Case -  Missing Required Fields)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"pm.test(\"Response should be an object with error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.message).to.include(\"Missing required field\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Annamalai\",\r\n  \"email\": \"annamalai@shoecart.com\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php?user_id=7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "7"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Request to Remove User (Positive Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be an object with message 'User deleted'\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.message).to.eql(\"User deleted\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php?username=annamalai",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "annamalai"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE Request to Remove User (Negative Case)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is of type JSON\", function () {\r",
+							"    pm.response.to.be.json;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response should be an object with error message\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData).to.be.an(\"object\");\r",
+							"    pm.expect(jsonData.message).to.include(\"User not found\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost/shoecart/server/api/users.php?user_id=7",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"shoecart",
+						"server",
+						"api",
+						"users.php"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "7"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
